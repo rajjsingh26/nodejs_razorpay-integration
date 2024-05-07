@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="rzp-button1">Pay</button>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+
+        const rpbutton = document.getElementById('rzp-button1');
+
+        rpbutton.addEventListener('click', async (event) => {
+            try {
+                const response = await fetch('/order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount: 500 })
+                });
+
+                const convertResponse = await response.json();
+                const { order } = convertResponse;
+
+                var options = {
+                    "key": "xxxx",
+                    "amount": order.amount,
+                    "currency": "INR",
+                    "order_id": order.id
+                };
+
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+            } catch (error) {
+                console.error('Error during fetch:', error);
+            }
+        });
+
+    </script>
+</body>
+
+</html>
